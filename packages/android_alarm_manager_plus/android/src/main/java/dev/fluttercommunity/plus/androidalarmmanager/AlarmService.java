@@ -254,7 +254,10 @@ public class AlarmService extends JobIntentService {
     SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
 
     synchronized (persistentAlarmsLock) {
-      Set<String> persistentAlarms = new HashSet<>(prefs.getStringSet(PERSISTENT_ALARMS_SET_KEY, new HashSet<>()));
+      Set<String> persistentAlarms = prefs.getStringSet(PERSISTENT_ALARMS_SET_KEY, null);
+      if (persistentAlarms == null) {
+        persistentAlarms = new HashSet<>();
+      }
       if (persistentAlarms.isEmpty()) {
         RebootBroadcastReceiver.enableRescheduleOnReboot(context);
       }
@@ -268,10 +271,11 @@ public class AlarmService extends JobIntentService {
   }
 
   private static void clearPersistentAlarm(Context context, int requestCode) {
+    String request = String.valueOf(requestCode);
     SharedPreferences p = context.getSharedPreferences(SHARED_PREFERENCES_KEY, 0);
     synchronized (persistentAlarmsLock) {
-      Set<String> persistentAlarms = new HashSet<>(p.getStringSet(PERSISTENT_ALARMS_SET_KEY, new HashSet<>()));
-      if (!persistentAlarms.contains(requestCode)) {
+      Set<String> persistentAlarms = p.getStringSet(PERSISTENT_ALARMS_SET_KEY, null);
+      if ((persistentAlarms == null) || !persistentAlarms.contains(request)) {
         return;
       }
       persistentAlarms.remove(requestCode);
