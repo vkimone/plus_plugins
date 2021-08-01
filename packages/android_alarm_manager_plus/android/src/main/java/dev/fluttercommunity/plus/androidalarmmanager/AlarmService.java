@@ -261,11 +261,13 @@ public class AlarmService extends JobIntentService {
       if (persistentAlarms.isEmpty()) {
         RebootBroadcastReceiver.enableRescheduleOnReboot(context);
       }
-      persistentAlarms.add(Integer.toString(requestCode));
+      Set<String> copiedPersistentAlarms = new HashSet<>(prefs.getStringSet(PERSISTENT_ALARMS_SET_KEY, new HashSet<>()));
+      System.out.println(copiedPersistentAlarms);
+      copiedPersistentAlarms.add(Integer.toString(requestCode));
       prefs
           .edit()
           .putString(key, obj.toString())
-          .putStringSet(PERSISTENT_ALARMS_SET_KEY, persistentAlarms)
+          .putStringSet(PERSISTENT_ALARMS_SET_KEY, copiedPersistentAlarms)
           .apply();
     }
   }
@@ -278,11 +280,13 @@ public class AlarmService extends JobIntentService {
       if ((persistentAlarms == null) || !persistentAlarms.contains(request)) {
         return;
       }
-      persistentAlarms.remove(requestCode);
+      Set<String> copiedPersistentAlarms = new HashSet<>(p.getStringSet(PERSISTENT_ALARMS_SET_KEY, new HashSet<>()));
+      System.out.println(copiedPersistentAlarms);
+      copiedPersistentAlarms.remove(request);
       String key = getPersistentAlarmKey(requestCode);
-      p.edit().remove(key).putStringSet(PERSISTENT_ALARMS_SET_KEY, persistentAlarms).apply();
+      p.edit().remove(key).putStringSet(PERSISTENT_ALARMS_SET_KEY, copiedPersistentAlarms).apply();
 
-      if (persistentAlarms.isEmpty()) {
+      if (copiedPersistentAlarms.isEmpty()) {
         RebootBroadcastReceiver.disableRescheduleOnReboot(context);
       }
     }
