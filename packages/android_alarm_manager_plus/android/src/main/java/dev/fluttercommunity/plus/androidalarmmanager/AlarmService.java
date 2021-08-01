@@ -262,7 +262,6 @@ public class AlarmService extends JobIntentService {
         RebootBroadcastReceiver.enableRescheduleOnReboot(context);
       }
       Set<String> copiedPersistentAlarms = new HashSet<>(prefs.getStringSet(PERSISTENT_ALARMS_SET_KEY, new HashSet<>()));
-      System.out.println(copiedPersistentAlarms);
       copiedPersistentAlarms.add(Integer.toString(requestCode));
       prefs
           .edit()
@@ -281,7 +280,6 @@ public class AlarmService extends JobIntentService {
         return;
       }
       Set<String> copiedPersistentAlarms = new HashSet<>(p.getStringSet(PERSISTENT_ALARMS_SET_KEY, new HashSet<>()));
-      System.out.println(copiedPersistentAlarms);
       copiedPersistentAlarms.remove(request);
       String key = getPersistentAlarmKey(requestCode);
       p.edit().remove(key).putStringSet(PERSISTENT_ALARMS_SET_KEY, copiedPersistentAlarms).apply();
