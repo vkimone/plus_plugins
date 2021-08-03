@@ -1,6 +1,7 @@
 package dev.fluttercommunity.plus.androidalarmmanager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 
 public class AlarmFlagManager {
@@ -8,7 +9,8 @@ public class AlarmFlagManager {
   private static final String FLUTTER_SHARED_PREFERENCE_KEY = "FlutterSharedPreferences";
   private static final String ALARM_FLAG_KEY = "flutter.alarmFlagKey";
 
-  static void set(Context context, long callbackId) {
+  static void set(Context context, Intent intent) {
+    int callbackId = intent.getIntExtra("id", -1);
     long alarmId = _getActualIdFrom(callbackId);
 
     SharedPreferences prefs = context.getSharedPreferences(FLUTTER_SHARED_PREFERENCE_KEY, 0);
