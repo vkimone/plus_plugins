@@ -10,31 +10,33 @@ import android.content.Intent;
 import android.os.PowerManager;
 
 public class AlarmBroadcastReceiver extends BroadcastReceiver {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        PowerManager powerManager = (PowerManager)
-                context.getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK |
-                PowerManager.ACQUIRE_CAUSES_WAKEUP |
-                PowerManager.ON_AFTER_RELEASE, "AlarmBroadcastReceiver:My wakelock");
+  @Override
+  public void onReceive(Context context, Intent intent) {
+    AlarmFlagManager.set(context, intent);
 
-        Intent startIntent = context
-                .getPackageManager()
-                .getLaunchIntentForPackage(context.getPackageName());
+    PowerManager powerManager = (PowerManager)
+      context.getSystemService(Context.POWER_SERVICE);
+    PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK |
+      PowerManager.ACQUIRE_CAUSES_WAKEUP |
+      PowerManager.ON_AFTER_RELEASE, "AlarmBroadcastReceiver:My wakelock");
 
-        if (startIntent != null)
-            startIntent.setFlags(
-                    Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
-                            Intent.FLAG_ACTIVITY_NEW_TASK |
-                            Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
-            );
+    Intent startIntent = context
+      .getPackageManager()
+      .getLaunchIntentForPackage(context.getPackageName());
 
-        wakeLock.acquire(3 * 60 * 1000L /*3 minutes*/);
-        context.startActivity(startIntent);
-        AlarmService.enqueueAlarmProcessing(context, intent);
-        wakeLock.release();
+    if (startIntent != null)
+      startIntent.setFlags(
+        Intent.FLAG_ACTIVITY_REORDER_TO_FRONT |
+          Intent.FLAG_ACTIVITY_NEW_TASK |
+          Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED
+      );
 
-        // Close dialogs and window shade, so this is fully visible
-        context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-    }
+    wakeLock.acquire(3 * 60 * 1000L /*3 minutes*/);
+    context.startActivity(startIntent);
+    AlarmService.enqueueAlarmProcessing(context, intent);
+    wakeLock.release();
+
+    // Close dialogs and window shade, so this is fully visible
+    context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+  }
 }
