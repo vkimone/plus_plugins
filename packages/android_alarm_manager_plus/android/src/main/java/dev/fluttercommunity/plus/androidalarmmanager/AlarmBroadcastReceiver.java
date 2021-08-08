@@ -7,6 +7,7 @@ package dev.fluttercommunity.plus.androidalarmmanager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.PowerManager;
 
 public class AlarmBroadcastReceiver extends BroadcastReceiver {
@@ -36,7 +37,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
     AlarmService.enqueueAlarmProcessing(context, intent);
     wakeLock.release();
 
-    // Close dialogs and window shade, so this is fully visible
-    context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+    if (Build.VERSION.SDK_INT < 31)
+      context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
   }
 }
