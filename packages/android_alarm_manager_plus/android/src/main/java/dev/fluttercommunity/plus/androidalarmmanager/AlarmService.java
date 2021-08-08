@@ -131,8 +131,12 @@ public class AlarmService extends JobIntentService {
     Intent alarm = new Intent(context, AlarmBroadcastReceiver.class);
     alarm.putExtra("id", requestCode);
     alarm.putExtra("callbackHandle", callbackHandle);
-    PendingIntent pendingIntent =
-        PendingIntent.getBroadcast(context, requestCode, alarm, PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent pendingIntent = PendingIntent.getBroadcast(
+      context,
+      requestCode,
+      alarm,
+      PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+    );
 
     // Use the appropriate clock.
     int clock = AlarmManager.RTC;
@@ -215,8 +219,12 @@ public class AlarmService extends JobIntentService {
 
     // Cancel the alarm with the system alarm service.
     Intent alarm = new Intent(context, AlarmBroadcastReceiver.class);
-    PendingIntent existingIntent =
-        PendingIntent.getBroadcast(context, requestCode, alarm, PendingIntent.FLAG_NO_CREATE);
+    PendingIntent existingIntent = PendingIntent.getBroadcast(
+      context,
+      requestCode,
+      alarm,
+      PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_NO_CREATE
+    );
     if (existingIntent == null) {
       Log.i(TAG, "cancel: broadcast receiver not found");
       return;
