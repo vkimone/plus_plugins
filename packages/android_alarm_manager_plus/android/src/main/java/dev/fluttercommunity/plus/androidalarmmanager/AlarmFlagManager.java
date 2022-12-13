@@ -14,7 +14,18 @@ public class AlarmFlagManager {
     long alarmId = getActualIdFrom(callbackId);
 
     SharedPreferences prefs = context.getSharedPreferences(FLUTTER_SHARED_PREFERENCE_KEY, 0);
-    prefs.edit().putLong(ALARM_FLAG_KEY, alarmId).apply();
+    synchronized (ALARM_FLAG_KEY) {
+      String alarmFlags = prefs.getString(ALARM_FLAG_KEY, "");
+      if (alarmFlags == null) {
+        alarmFlags = "";
+      }
+      if (!alarmFlags.isEmpty()) {
+        alarmFlags += " ";
+      }
+      alarmFlags += alarmId;
+
+      prefs.edit().putString(ALARM_FLAG_KEY, alarmFlags).apply();
+    }
   }
 
   /**
