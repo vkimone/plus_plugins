@@ -35,7 +35,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
     wakeLock.acquire(3 * 60 * 1000L /*3 minutes*/);
     context.startActivity(startIntent);
     AlarmService.enqueueAlarmProcessing(context, intent);
-    wakeLock.release();
+    //wakeLock.release();
 
     if (Build.VERSION.SDK_INT < 31)
       context.sendBroadcast(new Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
