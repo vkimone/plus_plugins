@@ -15,7 +15,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.AlarmManagerCompat;
-import androidx.core.app.JobIntentService;
+//import androidx.core.app.JobIntentService;
+import dev.fluttercommunity.plus.androidalarmmanager.JobIntentService;
 
 import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback;
 
@@ -45,7 +46,7 @@ public class AlarmService extends JobIntentService {
    * Schedule the alarm to be handled by the {@link AlarmService}.
    */
   public static void enqueueAlarmProcessing(Context context, Intent alarmContext) {
-    enqueueWork(context, AlarmService.class, JOB_ID, alarmContext);
+    enqueueWork(context, AlarmService.class, JOB_ID, alarmContext, true);
   }
 
   /**
